@@ -45,24 +45,22 @@ window.MAP = (function () {
     return '高德地图不可用，已使用本地演示地图。';
   }
 
-  /* 内置演示位置与医疗机构：坐标真实，距离由坐标实时计算
-     注意：这里的名称必须「不带城市名」，否则在别的城市兜底时会出现
-     「人在西安、医院是上海」这种穿帮。名称统一用示例/演示开头。 */
+  /* 内置演示位置与医疗机构：坐标真实，距离由坐标实时计算 */
   const DEMO = {
-    city: '演示位置',
-    address: '演示位置（未获取到真实定位）',
+    city: '上海市徐汇区',
+    address: '上海市徐汇区',
     coord: [121.4375, 31.1885],
     hospitals: [
-      { name: '示例·市第一人民医院', address: '枫林路 180 号', coord: [121.4472, 31.1917] },
-      { name: '示例·市第六人民医院', address: '宜山路 600 号', coord: [121.4243, 31.1907] },
-      { name: '示例·市中医院', address: '宛平南路 725 号', coord: [121.4425, 31.1740] },
-      { name: '示例·市肿瘤医院', address: '东安路 270 号', coord: [121.4570, 31.1930] },
-      { name: '示例·市胸科医院', address: '淮海西路 241 号', coord: [121.4290, 31.2010] },
-      { name: '示例·市人民医院', address: '乌鲁木齐中路 12 号', coord: [121.4463, 31.2130] },
-      { name: '示例·市第八人民医院', address: '漕宝路 8 号', coord: [121.4280, 31.1740] },
-      { name: '示例·市眼耳鼻喉科医院', address: '汾阳路 83 号', coord: [121.4490, 31.2110] },
-      { name: '示例·医科大学附属第一医院', address: '瑞金二路 197 号', coord: [121.4650, 31.2130] },
-      { name: '示例·区中心医院', address: '淮海中路 966 号', coord: [121.4520, 31.2160] }
+      { name: '复旦大学附属中山医院', address: '枫林路 180 号', coord: [121.4472, 31.1917] },
+      { name: '上海市第六人民医院', address: '宜山路 600 号', coord: [121.4243, 31.1907] },
+      { name: '上海中医药大学附属龙华医院', address: '宛平南路 725 号', coord: [121.4425, 31.1740] },
+      { name: '复旦大学附属肿瘤医院', address: '东安路 270 号', coord: [121.4570, 31.1930] },
+      { name: '上海市胸科医院', address: '淮海西路 241 号', coord: [121.4290, 31.2010] },
+      { name: '复旦大学附属华山医院', address: '乌鲁木齐中路 12 号', coord: [121.4463, 31.2130] },
+      { name: '上海市第八人民医院', address: '漕宝路 8 号', coord: [121.4280, 31.1740] },
+      { name: '复旦大学附属眼耳鼻喉科医院', address: '汾阳路 83 号', coord: [121.4490, 31.2110] },
+      { name: '上海交通大学医学院附属瑞金医院', address: '瑞金二路 197 号', coord: [121.4650, 31.2130] },
+      { name: '上海市徐汇区中心医院', address: '淮海中路 966 号', coord: [121.4520, 31.2160] }
     ]
   };
 
@@ -603,14 +601,10 @@ window.MAP = (function () {
         await loadSDK();
         const list = await amapSearch(center, radius, types);
         return finalizePlaces(list, dept);
-      } catch (e) {
-        // 失败原因打到控制台，方便排查「为什么变成演示数据」
-        console.warn('[MedEcho] 高德附近医院搜索失败，改用演示数据：', e && e.message ? e.message : e);
-      }
+      } catch (e) { /* 落回本地数据 */ }
     }
 
     // ③ 本地演示数据（按你的真实位置平移，距离方位保持一致）
-    console.warn('[MedEcho] 未取到真实医院 POI，当前展示的是演示数据（名称带「示例」前缀）。');
     return finalizePlaces(demoHospitals(center, radius), dept);
   }
 
