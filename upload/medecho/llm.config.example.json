@@ -1,0 +1,10 @@
+{
+  "provider": "openai-next",
+  "baseURL": "https://api.openai-next.com/v1",
+  "model": "qwen-flash",
+  "apiKey": "sk-把你自己的密钥填在这里",
+  "temperature": 0.3,
+  "timeoutMs": 25000,
+  "questionTokens": 500,
+  "reportTokens": 900
+}

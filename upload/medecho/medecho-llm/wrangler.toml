@@ -1,0 +1,10 @@
+# Cloudflare Worker 配置
+# 注意：这里只放「地址」和「模型名」，密钥用 wrangler secret 写入，绝不写进文件
+
+name = "medecho-llm"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+LLM_BASE_URL = "https://api.openai-next.com/v1"
+LLM_MODEL = "qwen-flash"

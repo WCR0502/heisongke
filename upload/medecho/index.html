@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0B3A30" />
+  <title>同频 MedEcho · 症状梳理与就医安排</title>
+  <link rel="stylesheet" href="assets/css/console.css?v=76" />
+</head>
+<body>
+<div class="app">
+
+  <!-- ==================== 顶栏 ==================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+          <path d="M12 4.4v15.2M4.4 12h15.2" />
+        </svg>
+      </span>
+      <b>同频 MedEcho</b>
+    </div>
+
+    <!-- 主导航：只做位置提示，不可点击（沿用 .stepbar/.step 供 go() 切换 on/done） -->
+    <nav class="topnav stepbar" id="stepBar" aria-label="主导航">
+      <div class="step on" data-step="start"><span>首页</span></div>
+      <div class="nav-slot">
+        <div class="step" data-step="ask"><span>症状梳理</span></div>
+        <div class="step step-dup" data-step="result" aria-hidden="true"><span>症状梳理</span></div>
+      </div>
+      <div class="step" data-step="hospital"><span>就医指南</span></div>
+      <div class="step" data-step="record"><span>健康档案</span></div>
+    </nav>
+
+    <div class="topbar-right">
+      <span class="status-chip" id="aiChip"><i></i><span id="aiChipText">协作助手在线</span></span>
+      <span class="avatar" aria-hidden="true">林</span>
+    </div>
+  </header>
+
+  <div class="share-bar hidden" id="shareBar">
+    <b>家属查看中</b><span>这是一份只读档案，可以同步看到就诊进度。</span>
+  </div>
+
+  <main class="stage">
+
+    <!-- ==================== 01 首页 ==================== -->
+    <section class="screen active" data-screen="start" id="screen-start">
+
+      <section class="hero">
+        <span class="hero-seal">DEMO / 演示</span>
+        <div class="hero-copy">
+          <span class="hero-kicker">M E D E C H O · 就医协作助手</span>
+          <h1>把身体的信号，<br />说清楚一点。</h1>
+          <p class="hero-lead">从症状描述到就诊准备，陪你一步步找到合适的下一步。</p>
+          <div class="hero-cta">
+            <a class="btn primary lg" href="#symptomCard">开始整理症状 <span class="arw">→</span></a>
+            <span class="hero-note">约 2 分钟 · 随时可以修改</span>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <svg viewBox="0 0 400 240" fill="none" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+            <defs>
+              <linearGradient id="pulseGrad" x1="144" y1="120" x2="290" y2="120" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8FEBCF" />
+                <stop offset="1" stop-color="#F4FFFA" />
+              </linearGradient>
+              <filter id="pulseGlow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="7" />
+              </filter>
+            </defs>
+
+            <!-- 同心环 -->
+            <g stroke="#D9F7EA">
+              <circle cx="247" cy="120" r="118" stroke-opacity=".08" />
+              <circle cx="247" cy="120" r="84" stroke-opacity=".22" />
+              <circle cx="247" cy="120" r="52" stroke-opacity=".1" stroke-dasharray="2 8" />
+            </g>
+            <circle cx="247" cy="120" r="84" fill="#7FE6C6" fill-opacity=".045" />
+
+            <!-- 基线 -->
+            <path d="M0 120h400" stroke="#CFEFE1" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 8" />
+
+            <!-- 患者：断续的波形 -->
+            <path d="M0 120c12 0 14-14 26-14s14 14 26 14 14-18 26-18 14 18 26 18h20"
+              stroke="#8FEBCF" stroke-opacity=".55" stroke-width="1.9" stroke-linecap="round" stroke-dasharray="5 7" />
+
+            <!-- 医生：镜像波形 -->
+            <path d="M400 120c-12 0-14-14-26-14s-14 14-26 14-14-18-26-18-14 18-26 18h-6"
+              stroke="#F2FFF9" stroke-opacity=".45" stroke-width="1.9" stroke-linecap="round" stroke-dasharray="5 7" />
+
+            <!-- 汇合后的同一段心搏 -->
+            <path d="M144 120h22l6-10 6 10h10l7-46 7 74 6-58 5 30h12l6-8 6 8h29"
+              stroke="#7FE6C6" stroke-opacity=".5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" filter="url(#pulseGlow)" />
+            <path d="M144 120h22l6-10 6 10h10l7-46 7 74 6-58 5 30h12l6-8 6 8h29"
+              stroke="url(#pulseGrad)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+
+            <!-- 汇合点 -->
+            <circle cx="144" cy="120" r="6.2" fill="none" stroke="#8FEBCF" stroke-opacity=".5" />
+            <circle cx="144" cy="120" r="2.4" fill="#C9F7E7" />
+            <circle cx="290" cy="120" r="6.2" fill="none" stroke="#F2FFF9" stroke-opacity=".45" />
+            <circle cx="290" cy="120" r="2.4" fill="#F2FFF9" />
+
+            <circle cx="68" cy="44" r="2.6" fill="#8FEBCF" opacity=".5" />
+            <circle cx="352" cy="196" r="2.2" fill="#F2FFF9" opacity=".35" />
+
+            <text x="0" y="160" fill="#CFEFE1" fill-opacity=".42" font-size="9.5" letter-spacing="2">患者主诉</text>
+            <text x="400" y="160" fill="#CFEFE1" fill-opacity=".42" font-size="9.5" letter-spacing="2" text-anchor="end">医生判断</text>
+            <text x="247" y="26" fill="#9BEBCC" fill-opacity=".55" font-size="9.5" letter-spacing="4" text-anchor="middle">同 频 合 一</text>
+          </svg>
+        </div>
+      </section>
+
+      <div class="sec-head">
+        <h2>一次就医准备，从这里开始</h2>
+        <p>把复杂问题拆成轻松的几步</p>
+      </div>
+
+      <div class="doc-grid">
+        <article class="doc-card">
+          <span class="doc-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16v4z" /><path d="M14.5 5.5l4 4" /></svg>
+          </span>
+          <h3>说清楚症状</h3>
+          <p>从你自己的感受开始，不需要猜原因。</p>
+          <a class="doc-link" href="#symptomCard">开始描述 <span>→</span></a>
+        </article>
+
+        <article class="doc-card">
+          <span class="doc-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7.4" /><circle cx="12" cy="12" r="2.4" /></svg>
+          </span>
+          <h3>补充关键信息</h3>
+          <p>几个轻松的问题，让描述更完整。</p>
+          <a class="doc-link" href="#symptomCard">约 1 分钟 <span>→</span></a>
+        </article>
+
+        <article class="doc-card">
+          <span class="doc-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" /><circle cx="12" cy="10" r="2.6" /></svg>
+          </span>
+          <h3>找到合适的医院</h3>
+          <p>按位置查看附近机构与科室信息。</p>
+          <a class="doc-link" href="#symptomCard">查看附近 <span>→</span></a>
+        </article>
+
+        <article class="doc-card doc-progress">
+          <h3>你的信息整理进度</h3>
+          <b class="doc-num">0<i>/5 步</i></b>
+          <span class="bar"><i style="width:4%"></i></span>
+          <button class="doc-reset" id="resetBtn" type="button">重新开始</button>
+        </article>
+      </div>
+
+      <article class="card form-card" id="symptomCard">
+        <div class="card-head">
+          <h2>说清楚症状</h2>
+          <span class="badge">约 1 分钟</span>
+        </div>
+        <form class="symptom-form" id="symptomForm">
+          <label class="field-label" for="symptomInput">哪里不舒服</label>
+          <textarea id="symptomInput" maxlength="600" required
+            placeholder="例如：肚子疼了三天，吃完饭更明显，还有点反酸"></textarea>
+          <div class="form-foot"><span>可以只写一句</span><span id="charCount">0 / 600</span></div>
+          <button class="btn primary block" type="submit">开始整理 <span class="arw">→</span></button>
+        </form>
+      </article>
+
+      <article class="card quick-card">
+        <div class="quick-copy">
+          <h3>现在最想了解什么？</h3>
+          <p>选一个常见感受快速开始</p>
+          <div class="quick-picks" id="quickPicks">
+            <button class="quick-btn" type="button" data-fill="头疼，一阵一阵的，已经好几天了">头疼</button>
+            <button class="quick-btn" type="button" data-fill="咳嗽，有痰，晚上更厉害">咳嗽</button>
+            <button class="quick-btn" type="button" data-fill="胸口发闷，休息一会会好一点">胸闷</button>
+            <button class="quick-btn" type="button" data-fill="肚子疼，吃完饭更明显，还有点反酸">腹痛</button>
+            <button class="quick-btn" type="button" data-fill="睡不着，心里烦，已经两个星期">睡不好</button>
+          </div>
+        </div>
+
+        <figure class="mini-trend">
+          <figcaption id="trendTitle">近 7 天记录示意</figcaption>
+          <div class="mini-trend-row">
+            <b>2<i>天</i></b>
+            <svg viewBox="0 0 176 56" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="trendFill" x1="0" y1="12" x2="0" y2="50" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38C79C" stop-opacity=".26" />
+                  <stop offset="1" stop-color="#38C79C" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M8 20L35 30L62 24L88 36L115 28L142 40L168 32L168 50L8 50Z" fill="url(#trendFill)" />
+              <path d="M8 20L35 30L62 24L88 36L115 28L142 40L168 32"
+                stroke="#0E8C6A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              <g fill="#FFFFFF" stroke="#0E8C6A" stroke-width="1.7">
+                <circle cx="8" cy="20" r="2.4" />
+                <circle cx="35" cy="30" r="2.4" />
+                <circle cx="62" cy="24" r="2.4" />
+                <circle cx="88" cy="36" r="2.4" />
+                <circle cx="115" cy="28" r="2.4" />
+                <circle cx="142" cy="40" r="2.4" />
+                <circle cx="168" cy="32" r="2.4" />
+              </g>
+              <path d="M4 50h168" stroke="#CFE3D9" stroke-width="1" stroke-dasharray="2 5" />
+            </svg>
+          </div>
+          <div class="mini-x" aria-hidden="true"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+        </figure>
+
+        <p class="quick-note">本服务用于就医准备与信息整理，不替代医生诊断。<br />若出现紧急症状，请立即拨打 120。</p>
+      </article>
+
+    </section>
+
+    <!-- ==================== 02 补充细节 ==================== -->
+    <section class="screen" data-screen="ask" id="screen-ask">
+
+      <section class="hero sm">
+        <div class="hero-copy">
+          <span class="crumb">症状梳理 <em>/</em> <b>02 补充细节</b></span>
+          <h1>再补充几个细节，帮你把情况说完整。</h1>
+          <p class="hero-lead">像和一位耐心的健康顾问聊天一样，知道多少就回答多少。</p>
+        </div>
+        <div class="hero-side">
+          <div class="pcard">
+            <small>梳理进度</small>
+            <b>2<span>/5</span></b>
+            <span class="bar"><i style="width:40%"></i></span>
+          </div>
+        </div>
+      </section>
+
+      <div class="sec-head">
+        <h2>我们来慢慢了解</h2>
+        <p><b id="followupProgress">第 1 个问题</b> · 你可以随时修改或跳过</p>
+      </div>
+
+      <section class="followup-panel" id="followupPanel" aria-live="polite">
+        <div class="ask-grid">
+
+          <article class="card ask-main">
+            <div class="ask-head">
+              <span class="ask-badge" aria-hidden="true">问</span>
+              <div class="ask-title">
+                <h3 id="followupQuestion">先补充几条信息</h3>
+                <p id="followupHint">选择最接近的情况即可</p>
+              </div>
+              <div class="fu-meter" id="followupMeter" aria-hidden="true"></div>
+            </div>
+
+            <div class="llm-banner hidden" id="llmBanner">
+              <span id="llmBannerText"></span>
+              <span class="llm-actions">
+                <button class="mini-btn" id="llmRetry" type="button">重试</button>
+                <button class="mini-btn" id="llmFallback" type="button">不用 AI</button>
+              </span>
+            </div>
+
+            <div class="fu-wait hidden" id="followupWait"><i></i><span>正在整理你的描述…</span></div>
+
+            <div class="opt-grid" id="optionGrid"></div>
+
+            <button class="link-btn" id="typeInstead" type="button">都不是，我自己写 →</button>
+
+            <form class="followup-form opts-only" id="followupForm">
+              <label class="fu-label" for="followupInput">你的回答</label>
+              <textarea id="followupInput" rows="3" maxlength="500"
+                placeholder="例如：三天前开始的，吃完饭半小时后更疼，没有发烧"></textarea>
+              <p class="form-tip" id="followupFormHint">写完点“继续下一步”，也可以按回车键</p>
+            </form>
+
+            <div class="ask-actions">
+              <button class="btn ghost" id="editSymptoms" type="button">← 上一步</button>
+              <button class="btn primary" id="followupSubmit" type="submit" form="followupForm">继续下一步 <span class="arw">→</span></button>
+            </div>
+          </article>
+
+          <aside class="ask-side">
+            <article class="card said-card">
+              <details class="said-box" open>
+                <span class="said-art" aria-hidden="true"><svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" fill="#eefaf4"/><path d="M22 72c2-15 8-23 18-23s16 8 18 23z" fill="#ffffff" stroke="#cbeade"/><path d="M40 34c-9 0-15 6-15 14v6h30v-6c0-8-6-14-15-14z" fill="#f7e7d9"/><path d="M26 44c-1-10 5-17 15-17s16 6 15 16c-4-3-6-5-7-9-5 6-14 9-23 10z" fill="#173b32"/><path d="M56 24h12M62 18v12" stroke="#8fdcc1" stroke-width="1.6" stroke-linecap="round"/></svg></span><summary>你的描述正在成形<em class="said-cap">已确认的信息 · <b id="answeredCount">0</b> 条</em></summary>
+                <div class="followup-transcript" id="followupTranscript"></div>
+                <p class="panel-note">系统会把你的话整理成就诊摘要，不会替你判断病因。</p>
+              </details>
+            </article>
+
+            <article class="card help-card">
+              <h3><i aria-hidden="true">i</i>答不上来怎么办</h3>
+              <p>选“说不清”也能继续。你可以按自己的记忆回答，不确定的地方留给医生确认。</p>
+              <span class="help-btn">信息只用于本次就医整理</span>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </section>
+
+    <!-- ==================== 03 就医建议 ==================== -->
+    <section class="screen hidden" data-screen="result" id="results">
+
+      <section class="hero sm">
+        <div class="hero-copy">
+          <span class="crumb">症状梳理 <em>/</em> <b>03 就医建议</b></span>
+          <h1>把情况整理好了，接下来这样准备。</h1>
+          <p class="hero-lead">请把这份内容作为就医沟通参考，由医生进行专业评估。</p>
+        </div>
+        <div class="hero-side">
+          <div class="pcard">
+            <small>信息整理完成度</small>
+            <b>86<span>%</span></b>
+            <span class="bar"><i style="width:86%"></i></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 急诊模式：只在需要立刻处理时出现，一屏三步 -->
+      <div class="emergency-only" id="emergencyBlock">
+        <article class="emg-card">
+          <b class="emg-step">1</b>
+          <div><h2>马上打 120</h2><p>说清地址、年龄、现在最难受的地方。不要自己开车去。</p></div>
+        </article>
+        <article class="emg-card">
+          <b class="emg-step">2</b>
+          <div><h2>别吃药、别等</h2><p>不要自己吃药或喝水，把正在吃的药盒带上。</p></div>
+        </article>
+        <article class="emg-card">
+          <b class="emg-step">3</b>
+          <div><h2>到急诊先说这一句</h2><p id="emgSay"></p></div>
+        </article>
+      </div>
+
+      <div class="normal-only">
+
+        <div class="sec-head">
+          <h2>你的情况摘要</h2>
+          <p>由你的描述整理而成，可带医生查看</p>
+        </div>
+
+        <div class="summary-grid">
+          <article class="card current-card">
+            <span class="mini-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4.5h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2z" /><path d="M9 9h6M9 12.5h6M9 16h3" /></svg>
+            </span>
+            <h3>当前描述</h3>
+            <p class="summary-text" id="summaryText"></p>
+            <p class="current-hint">建议就诊时补充说明发生频率、每次持续多久，以及与是否与活动有关。</p>
+          </article>
+
+          <article class="card prep-card" id="urgencyCard">
+            <span class="mini-ic soft" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.9 5.4 5.6.3-4.4 3.5 1.6 5.5-4.7-3.3-4.7 3.3 1.6-5.5L4.5 9.2l5.6-.3z" /></svg>
+            </span>
+            <h3>就诊准备建议</h3>
+            <p class="prep-title" id="urgencyTitle"></p>
+            <p class="prep-sub">可从以下科室开始了解</p>
+            <div class="dept-row" id="possibilities"></div>
+            <small class="dept-hint" id="deptHint"></small>
+            <p class="prep-note" id="urgencyText"></p>
+            <div class="prep-foot">
+              <button class="link-btn" id="urgencyAction" type="button"></button>
+              <span class="srcline" id="assessmentSource">参考信息 · 非诊断</span>
+            </div>
+            <div class="prep-art" aria-hidden="true">
+              <svg viewBox="0 0 120 120" fill="none">
+                <circle cx="62" cy="58" r="42" fill="#ffffff" opacity=".55" />
+                <path d="M30 116c3-20 15-31 32-31s29 11 32 31z" fill="#eaf8f1" stroke="#cbeade" />
+                <path d="M62 56c-13 0-22 9-22 21v14h44V77c0-12-9-21-22-21z" fill="#f7e7d9" />
+                <path d="M40 70c-2-14 7-24 22-24 16 0 24 9 23 23-6-4-8-7-10-13-7 8-21 12-35 14z" fill="#8fcdb4" />
+                <rect x="74" y="48" width="28" height="34" rx="5" fill="#ffffff" stroke="#cbeade" />
+                <path d="M80 57h16M80 63h16M80 69h9" stroke="#a9dcc8" stroke-width="1.6" stroke-linecap="round" />
+                <path d="M38 96c3-4 8-4 11 0M62 96c3-4 8-4 11 0" stroke="#cbeade" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+          </article>
+        </div>
+
+        <div class="sec-head">
+          <h2>就诊前，记得带上这 3 个重点</h2>
+          <p>让医生更快了解你的情况</p>
+        </div>
+
+        <div class="points-grid">
+          <article class="card point-card">
+            <b class="point-n">1</b>
+            <h3>怎么挂号</h3>
+            <p id="bookingAdvice"></p>
+          </article>
+          <article class="card point-card">
+            <b class="point-n">2</b>
+            <h3>在家怎么做</h3>
+            <p id="homeAdvice"></p>
+          </article>
+          <article class="card point-card danger">
+            <b class="point-n">3</b>
+            <h3>出现这些马上去急诊</h3>
+            <p id="redFlagAdvice"></p>
+          </article>
+        </div>
+      </div>
+
+      <div class="emg-bar">
+        <span class="emg-bar-ic" aria-hidden="true">!</span>
+        <p>若出现呼吸困难、持续胸痛、晕厥或意识不清，请立即拨打 120。<br /><em>紧急情况请优先寻求急救。</em></p>
+        <button class="btn primary" id="goHospital" type="button">查找附近医院 <span class="arw">→</span></button>
+      </div>
+
+      <div class="screen-actions">
+        <button class="link-btn" id="goRecord" type="button">看就诊档案（演示）</button>
+        <button class="link-btn" id="goEdit" type="button">重新描述症状</button>
+      </div>
+    </section>
+
+    <!-- ==================== 04 查找机构 ==================== -->
+    <section class="screen" data-screen="hospital" id="screen-hospital">
+
+      <section class="hero sm">
+        <div class="hero-copy">
+          <span class="crumb">就医指南 <em>/</em> <b>04 查找机构</b></span>
+          <h1>从附近开始，找到合适的就医地点。</h1>
+          <p class="hero-lead">按位置、科室和距离浏览周边医疗机构。</p>
+        </div>
+        <div class="hero-side">
+          <div class="pcard loc">
+            <span class="loc-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" /><circle cx="12" cy="10" r="2.6" /></svg>
+            </span>
+            <div>
+              <small>当前位置</small>
+              <span class="status-chip" id="locationChip"><i></i><span id="locationChipText">未定位</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="sec-head">
+        <h2>附近医疗机构</h2>
+        <p>按你的实时位置检索 · 距离由坐标实时计算</p>
+      </div>
+
+      <div class="hosp-grid">
+        <div class="hosp-main">
+          <div class="map-card">
+            <div class="map-tools">
+              <button class="map-pill" id="locateMe" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" /><circle cx="12" cy="10" r="2.6" /></svg>
+                更新定位并搜索
+              </button>
+              <label class="map-pill select" for="poiRadius">
+                <select id="poiRadius" aria-label="附近医院搜索半径">
+                  <option value="3000">3 公里</option>
+                  <option value="5000" selected>5 公里</option>
+                  <option value="10000">10 公里</option>
+                  <option value="20000">20 公里</option>
+                </select>
+              </label>
+            </div>
+            <div class="hospital-map" id="hospitalMap"><div class="empty-results">点上面的按钮，就能看到附近的医院。</div></div>
+          </div>
+          <p class="map-status" id="mapStatus">还没有定位，需要允许浏览器使用位置。</p>
+
+          <section class="appointments card">
+            <div class="apt-head">
+              <h2>可以挂的号</h2>
+              <span class="badge demo">医生与号源为演示数据</span>
+            </div>
+
+            <div class="dept-filter hidden" id="deptFilterBox"></div>
+
+            <div class="apt-filters">
+              <label for="hospitalFilter">看哪家
+                <select id="hospitalFilter"><option value="all">全部医院</option></select>
+              </label>
+              <label for="sortSelect">怎么排
+                <select id="sortSelect">
+                  <option value="distance-asc">近的在前</option>
+                  <option value="price-asc">便宜的在前</option>
+                  <option value="time-asc">早能看的在前</option>
+                </select>
+              </label>
+              <button class="text-btn" id="clearFilters" type="button">清空筛选</button>
+            </div>
+
+            <!-- 价格滑块对老人不友好，保留元素以兼容逻辑，视觉隐藏；默认不限价 -->
+            <div class="sr-only" aria-hidden="true">
+              <output id="priceOutput">不限</output>
+              <input id="priceFilter" type="range" min="0" max="300" step="10" value="300" />
+              <small id="locationStatus">请先定位</small>
+            </div>
+
+            <div class="appointment-list" id="appointmentList"></div>
+          </section>
+        </div>
+
+        <aside class="hosp-side">
+          <article class="card stat-card">
+            <div class="stat-head"><h3>附近机构</h3><span class="stat-cap">实时统计</span></div>
+            <div class="apt-stats" id="aptStats">
+              <div class="stat"><b id="statHospitals">—</b><span>家医院</span></div>
+              <div class="stat"><b id="statSlots">—</b><span>个号</span></div>
+              <div class="stat"><b id="statNearest">—</b><span>最近</span></div>
+              <div class="stat"><b id="statEarliest">—</b><span>最早</span></div>
+            </div>
+          </article>
+
+          <article class="card find-card">
+            <div class="find-head">
+              <h3>为你找到的机构</h3>
+              <span class="find-tag" id="findTag">全科 · 附近优先</span>
+            </div>
+            <div class="map-locations" id="mapLocations"></div>
+            <p class="panel-note">距离为演示数据，号源与预约信息请以机构实际公布为准。</p>
+          </article>
+        </aside>
+      </div>
+
+      <div class="note-bar">
+        <span aria-hidden="true">!</span>提示：紧急症状请优先前往急诊或拨打 120，不要等待普通门诊预约。
+      </div>
+
+      <div class="screen-actions">
+        <button class="btn ghost" id="goBack" type="button">← 回到整理结果</button>
+      </div>
+    </section>
+
+    <!-- ==================== 05 我的档案 ==================== -->
+    <section class="screen" data-screen="record" id="screen-record">
+
+      <section class="hero sm">
+        <div class="hero-copy">
+          <span class="crumb">就医准备 <em>/</em> <b>05 我的档案</b></span>
+          <h1>把重要的事带上，一起去看医生。</h1>
+          <p class="hero-lead">症状摘要、想问的问题和就诊安排，都在这张卡片里。</p>
+        </div>
+        <div class="hero-side">
+          <div class="pcard">
+            <small>就诊准备完成度</small>
+            <b>80<span>%</span></b>
+            <span class="bar"><i style="width:80%"></i></span>
+          </div>
+        </div>
+      </section>
+
+      <div class="sec-head">
+        <h2>本次就诊卡片</h2>
+        <p>演示内容 · 就诊信息请以实际安排为准</p>
+      </div>
+
+      <article class="card visit-card">
+        <span class="visit-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5.4v13.2M5.4 12h13.2" /></svg>
+        </span>
+        <div class="visit-main">
+          <small>计划咨询</small>
+          <p class="rec-meta" id="recMeta"></p>
+        </div>
+        <div class="visit-remind">
+          <small>就诊时记得</small>
+          <b>带上正在使用的药物清单</b>
+          <span>可在下方补充用药、过敏史与既往病史</span>
+        </div>
+        <button class="btn primary" id="printCard" type="button">打印就诊卡片 <span class="arw">↗</span></button>
+      </article>
+
+      <div class="sec-head">
+        <h2>症状时间线</h2>
+        <p>把感受的变化说清楚，帮助医生快速了解</p>
+      </div>
+
+      <article class="card ride-card">
+        <ol class="ride" id="rideSteps">
+          <li data-state="booked"><i>1</i><span>已挂号</span></li>
+          <li data-state="waiting"><i>2</i><span>候诊中</span></li>
+          <li data-state="seeing"><i>3</i><span>问诊中</span></li>
+          <li data-state="pharmacy"><i>4</i><span>取药</span></li>
+          <li data-state="done"><i>5</i><span>完成</span></li>
+        </ol>
+        <p class="ride-hint" id="rideHint">现在：已挂号</p>
+      </article>
+
+      <div class="record-grid">
+        <article class="card q-card">
+          <div class="q-head">
+            <h3>我想问医生</h3>
+            <span class="q-add">＋ 添加问题</span>
+          </div>
+          <ul class="q-list" id="questionList"></ul>
+        </article>
+
+        <article class="card ready-card">
+          <div class="ready-head">
+            <h3>档案准备情况</h3>
+            <span>待确认 <b id="confirmLeft">0</b> 条</span>
+          </div>
+          <span class="bar"><i style="width:60%"></i></span>
+          <ul class="order-list" id="orderList"></ul>
+          <p class="panel-note">由模型整理成草稿，需要你逐条确认；真实医嘱以医院处方为准。</p>
+        </article>
+      </div>
+
+      <article class="card big-card" id="doctorCard">
+        <div class="big-card-label">医生说的</div>
+        <p class="doctor-empty" id="doctorEmpty">问诊开始后，医生说的话会记在这里。</p>
+        <ul class="q-list" id="doctorList"></ul>
+      </article>
+
+      <article class="card big-card recite hidden" id="reciteCard">
+        <div class="big-card-label">取药时核对</div>
+        <p class="recite-lead">等药的时间正好用来复述一遍，确认没听错。</p>
+        <div id="reciteBody"></div>
+        <p class="recite-done hidden" id="reciteDone">✓ 三句都核对过了，可以放心回家。</p>
+      </article>
+
+      <div class="screen-actions">
+        <button class="btn ghost" id="shareCard" type="button">发给家属</button>
+        <button class="btn primary" id="advanceState" type="button">下一步：候诊中</button>
+        <button class="link-btn" id="backToResult" type="button">← 回到整理结果</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<dialog class="booking-dialog" id="bookingDialog">
+  <button class="dialog-close" id="dialogClose" aria-label="关闭">×</button>
+  <div class="big-card-label">预约演示</div>
+  <h2 id="dialogTitle">核对信息</h2>
+  <p class="dialog-warning">没有连接医院系统，这一步不会真的挂号。</p>
+  <div class="booking-details" id="bookingDetails"></div>
+  <button class="btn primary block" id="dialogDone" type="button">确认，生成就诊档案</button>
+</dialog>
+
+<script src="assets/js/config.js?v=53"></script>
+<script src="assets/js/llm.js?v=51"></script>
+<script src="assets/js/map.js?v=72"></script>
+<script src="assets/js/booking.js?v=55"></script>
+<script src="assets/js/option-motion.js?v=54"></script>
+</body>
+</html>

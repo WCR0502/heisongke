@@ -1,0 +1,180 @@
+/* =========================================================
+   同频 MedEcho · 号源列表、弹窗与响应式
+   ========================================================= */
+
+.appointments{margin-top:44px}
+.appointments .section-head{margin-bottom:18px}
+.results-layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:18px;align-items:start}
+
+/* ---------- 筛选 ---------- */
+.filters{
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-md);
+  padding:18px;position:sticky;top:84px;
+}
+.filter-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.filter-title b{font-size:13px}
+.filter-title button{border:0;background:none;color:var(--muted);font-size:12px;padding:0}
+.filter-title button:hover{color:var(--brand)}
+.filters>label{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:12px;font-weight:600;color:var(--ink-2);margin:16px 0 7px;
+}
+.filters output{color:var(--brand);font-weight:600}
+.filters select{
+  width:100%;height:36px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:#fbfdfc;padding:0 9px;font-size:12.5px;
+}
+.filters select:disabled{color:var(--faint);background:#f4f7f5;cursor:not-allowed}
+.filters input[type=range]{width:100%;margin:0;accent-color:var(--brand)}
+.range-ends{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:2px}
+.source-note{display:flex;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.source-note>span{color:var(--brand);font-size:14px;line-height:1.5}
+.source-note b{display:block;font-size:12px}
+.source-note small{display:block;font-size:11.5px;line-height:1.55;color:var(--muted);margin-top:3px}
+
+/* ---------- 列表 ---------- */
+/* ---------- 概览统计 ---------- */
+.apt-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r-md);overflow:hidden;margin-bottom:14px;
+}
+.apt-stats .stat{background:#fff;padding:11px 14px}
+.apt-stats b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.apt-stats span{display:block;font-size:11px;color:var(--muted);margin-top:1px}
+
+/* ---------- 号源表 ---------- */
+.appointment-results{
+  --cols:minmax(0,1.7fr) minmax(0,1.25fr) 84px 50px 54px 66px 58px;
+  min-width:0;
+}
+.apt-cols{
+  display:grid;grid-template-columns:var(--cols);gap:12px;
+  padding:0 16px 7px;font-size:11px;color:var(--faint);
+}
+.appointment-list{display:grid;gap:7px}
+
+.apt-row{
+  display:grid;grid-template-columns:var(--cols);gap:12px;align-items:center;
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-md);
+  padding:11px 16px;transition:.15s;
+}
+.apt-row:hover{border-color:var(--brand-line);box-shadow:var(--sh-sm)}
+
+.apt-name{
+  font-size:13.5px;font-weight:600;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.apt-doctor{min-width:0}
+.apt-doctor b{display:block;font-size:12.5px;font-weight:600}
+.apt-doctor span{
+  display:block;font-size:11.5px;color:var(--muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.apt-time{font-size:12.5px;font-weight:600}
+.apt-left{font-size:12.5px;color:var(--ink-2)}
+.apt-left.low{color:var(--warn);font-weight:600}
+.apt-price{font-size:12.5px;font-weight:600;color:var(--ink)}
+.apt-dist b{display:block;font-size:11.5px;font-weight:500;color:var(--muted)}
+.apt-dist .bar{
+  display:block;height:3px;margin-top:4px;border-radius:2px;
+  background:#eef2f0;overflow:hidden;
+}
+.apt-dist .bar>span{display:block;height:100%;border-radius:2px;background:var(--brand);opacity:.45}
+
+.book-btn{
+  border:1px solid var(--brand);background:#fff;color:var(--brand);
+  border-radius:var(--r-sm);padding:6px 12px;font-size:12px;font-weight:600;line-height:1.4;
+  white-space:nowrap;transition:.15s;
+}
+.book-btn:hover{background:var(--brand);color:#fff}
+
+.empty-results{
+  background:#fff;border:1px dashed var(--line-2);border-radius:var(--r-md);
+  padding:26px 22px;text-align:center;font-size:13px;line-height:1.7;color:var(--muted);
+}
+.hospital-map>.empty-results{
+  display:grid;place-items:center;min-height:140px;margin:12px;
+  border:0;background:transparent;color:var(--faint);
+}
+
+/* ---------- 页脚 ---------- */
+.page-footer{
+  grid-column:1/-1;margin-top:36px;padding-top:18px;
+  border-top:1px solid var(--line);font-size:11.5px;color:var(--faint);
+}
+
+/* ---------- 弹窗 ---------- */
+.booking-dialog{
+  position:relative;width:min(430px,calc(100% - 32px));max-height:calc(100% - 40px);
+  overflow:auto;border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:28px;color:var(--ink);box-shadow:0 24px 80px rgba(12,36,26,.22);
+}
+.booking-dialog::backdrop{background:rgba(15,33,27,.4);backdrop-filter:blur(3px)}
+.dialog-close{
+  position:absolute;right:14px;top:10px;border:0;background:none;
+  font-size:22px;line-height:1;color:var(--faint);padding:6px;
+}
+.dialog-close:hover{color:var(--ink)}
+.booking-dialog h2{font-size:21px;margin:10px 0 12px}
+.dialog-warning{
+  font-size:12px;line-height:1.7;color:#8a5327;
+  background:var(--warn-soft);border:1px solid var(--warn-line);
+  border-radius:var(--r-sm);padding:10px 12px;
+}
+.booking-details{
+  border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:6px 14px;margin:16px 0;font-size:12.5px;
+}
+.detail-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.detail-row:last-child{border-bottom:0}
+.detail-row span{color:var(--muted);flex:0 0 auto}
+.detail-row b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+.dialog-done{width:100%}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:0;padding:32px 20px 36px}
+  .intro,.aside{grid-column:1}
+  .aside{order:2;margin-top:24px}
+  .followup-panel{margin-top:28px}
+  .results{margin-top:28px;padding-top:28px}
+  .overview{grid-template-columns:1fr;gap:12px}
+  .results-layout{grid-template-columns:1fr}
+  .filters{position:static;display:grid;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start}
+  .filter-title,.source-note{grid-column:1/-1}
+  .map-head{flex-direction:column;align-items:stretch}
+  .map-actions{width:100%}
+  .map-actions select{flex:0 0 90px}
+  .map-actions .primary-btn{flex:1}
+  .hospital-map{aspect-ratio:1.6/1;min-height:260px}
+}
+@media(max-width:700px){
+  .apt-cols{display:none}
+  .apt-stats{grid-template-columns:repeat(2,1fr)}
+  .apt-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:12px 14px}
+  .apt-name{flex:1 1 100%;white-space:normal}
+  .apt-doctor{flex:1 1 100%}
+  .apt-dist{margin-left:auto;min-width:58px}
+  .book-btn{flex:1 1 100%;margin-top:4px;text-align:center}
+}
+@media(max-width:600px){
+  .brand-text small{display:none}
+  .status-chip{display:none}
+  .topbar{height:58px}
+  .intro h1{font-size:28px}
+  .lead{font-size:13.5px}
+  .aside{padding:22px 20px 18px}
+  .aside h2{font-size:16px;margin-bottom:18px}
+  .form-actions{flex-direction:column-reverse;align-items:stretch;gap:10px}
+  .form-actions .primary-btn{width:100%}
+  .privacy-note{justify-content:center}
+  .possibility-grid,.advice-grid{grid-template-columns:1fr}
+  .section-head,.panel-head{align-items:flex-start}
+  .section-head{flex-direction:column;gap:12px}
+  .filters{grid-template-columns:1fr}
+  .filter-title,.source-note{grid-column:auto}
+  .map-locations{grid-template-columns:1fr}
+  .page-footer{font-size:11px}
+  .booking-dialog{padding:24px 20px}
+}

@@ -1,0 +1,9 @@
+# 密钥文件不进仓库
+llm.config.json
+
+# 本地运行产生的日志
+.workbuddy/
+*.log
+
+# 依赖
+node_modules/
